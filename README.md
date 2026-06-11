@@ -50,6 +50,13 @@ environment variables that resolve per-user automatically:
 
 ## Field notes & tips
 
+### Recommended model: Claude Opus 4.8
+Run this automation with **Claude Opus 4.8**. It handles the long, multi-step run (web research,
+canonical-URL recovery, M365 account matching, PDF rendering, email) reliably and follows the Step 1
+output contract that keeps the research result a short one-line confirmation — avoiding the
+`[object Object]` step-result failure documented in `PATCH-NOTES.md`. Set it as the automation's model
+(or your default model) before enabling the schedule.
+
 ### A capable model can generalize the paths for you
 The template uses placeholders, but you don't always have to hand-edit a username. When the starter
 prompt is run with a strong default LLM (a colleague reported this with **Claude Sonnet**), the model
