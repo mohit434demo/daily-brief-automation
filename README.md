@@ -1,11 +1,18 @@
-# Daily Brief — Data SE News Automation
+# Daily & Weekly Brief — Data SE News Automation
 
 > Originally adapted from Shaeel Afsar's automation.
 
-A Microsoft Scout (Copilot) automation that, every weekday at 8am, researches the latest
-Data & AI news, curates it for a Microsoft Data Solutions Engineer, matches stories to your
-book of business using your own M365 signals, and emails you a branded PDF briefing with a
-clickable link.
+Two Microsoft Scout (Copilot) automations that research Data & AI news, curate it for a Microsoft
+Data Solutions Engineer, match stories to your book of business using your own M365 signals, and
+email you a branded PDF briefing with a clickable link:
+
+- **Daily Brief** — every weekday at 8am, over a 1-day (`when:2d`) news window.
+- **Weekly Brief** — every Friday at 1pm, over a 7-day (`when:7d`) lookback so it captures the
+  week's biggest stories fresh (not a roll-up of the dailies). Writes to a `Weekly` subfolder of
+  your briefings folder so the two never collide.
+
+Both share the same six-step pipeline below; the Weekly version only differs in schedule, the 7-day
+research window, its output subfolder, and "Weekly" in the titles.
 
 ## What it does
 
@@ -43,18 +50,24 @@ safely between runs.
 
 | File | Purpose |
 |------|---------|
-| `Daily-Brief.json` | The automation definition. Ships as a **template** with `__BRIEFINGS_FOLDER__` and `__ACCOUNTS__` placeholders. |
-| `starter-prompt.md` | Paste this into Scout to set it up — it asks for your file path and accounts and fills in the JSON. |
-| `PATCH-NOTES.md` | History of fixes already applied to the definition. |
+| `Daily-Brief.json` | The **daily** automation definition (weekday 8am). Ships as a **template** with `__BRIEFINGS_FOLDER__` and `__ACCOUNTS__` placeholders. |
+| `Weekly-Brief.json` | The **weekly** automation definition (Friday 1pm, 7-day lookback, `\Weekly` subfolder). Same template placeholders. |
+| `starter-prompt.md` | Paste into Scout to set up the **daily** brief — it asks for your file path and accounts and fills in the JSON. |
+| `starter-prompt-weekly.md` | Paste into Scout to set up the **weekly** brief. Reuses the same folder/accounts; writes to the `\Weekly` subfolder. |
+| `PATCH-NOTES.md` | History of fixes already applied to the definitions. |
 | `examples/` | A **redacted** sample briefing — PDF plus its source `.md`. Account names and internal signals are removed. |
 
 ## Setup
 
 1. Clone or download this repo onto the machine where Scout runs.
-2. Open [`starter-prompt.md`](starter-prompt.md) and paste the fenced prompt into Scout.
+2. **Daily brief:** open [`starter-prompt.md`](starter-prompt.md) and paste the fenced prompt into Scout.
 3. Answer the two questions it asks — your **briefings folder path** and your **accounts**.
    Scout fills those into `Daily-Brief.json`, imports the automation, tests it, and (on your
    confirmation) enables the weekday-8am schedule.
+4. **Weekly brief (optional):** open [`starter-prompt-weekly.md`](starter-prompt-weekly.md) and paste
+   that prompt into Scout. Give it the **same** base briefings folder and accounts — it sets up the
+   `Weekly Brief` automation (Friday 1pm, 7-day lookback) writing to the `\Weekly` subfolder, and
+   leaves your daily brief untouched.
 
 ## Placeholders
 
