@@ -3,6 +3,14 @@
 History of fixes applied to `Daily-Brief.json`. These are already incorporated into the
 shipped definition — this file documents them for reference.
 
+## Definition refreshed to match live automation (applied)
+
+**Change:** The shipped `Daily-Brief.json` was re-synced from the running automation so the template
+matches what actually executes. All six step prompts were updated. The main functional addition is
+the Step 1 → Step 2 research handoff file (documented below and in the README). User-specific values
+remain templated as `__BRIEFINGS_FOLDER__` and `__ACCOUNTS__`, with Pandoc/WorkIQ paths kept as the
+`$env:LOCALAPPDATA` / `$env:USERPROFILE` forms — no personal paths or account names are committed.
+
 ## 6e — Closing summary must be plain text (applied)
 
 **Problem:** The final step ("Convert, link & email") sometimes returned its closing status as a

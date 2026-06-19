@@ -1,5 +1,7 @@
 # Daily Brief — Data SE News Automation
 
+> Originally adapted from Shaeel Afsar's automation.
+
 A Microsoft Scout (Copilot) automation that, every weekday at 8am, researches the latest
 Data & AI news, curates it for a Microsoft Data Solutions Engineer, matches stories to your
 book of business using your own M365 signals, and emails you a branded PDF briefing with a
@@ -10,8 +12,9 @@ clickable link.
 Six sequential steps:
 
 1. **Conduct data & AI research** — discovers stories via Google News RSS and recovers canonical
-   article URLs.
-2. **Curate data news** — dedupes, filters, buckets and ranks stories into five sections.
+   article URLs, then writes the full result to a handoff file (see below).
+2. **Curate data news** — dedupes, filters, buckets and ranks stories into five sections, reading
+   its input from the research handoff file.
 3. **Write briefing report** — produces a structured Markdown report (no emojis, validated URLs).
 4. **Match news to accounts** — cross-references top stories against your accounts using emails,
    chats and meetings, and inserts an "Account Opportunity Matches" section.
@@ -20,6 +23,21 @@ Six sequential steps:
    creates a OneDrive share link, and emails the briefing to you.
 
 See [`examples/`](examples/) for a sample generated PDF.
+
+## Step-to-step handoff (`.handoff` files)
+
+Steps do **not** pass their full output inline between each other. A large inline step result was
+being stored and re-rendered as `[object Object]`, which the runner treated as a failure and
+re-ran the whole automation. To avoid that, the research step persists its detailed output to a
+dedicated handoff folder and passes forward only a short one-line confirmation:
+
+- `<briefings folder>\.handoff\research-<YYYY-MM-DD>.md` — written by **Step 1**, the full
+  `{headline, canonical_url, publisher, why_matters}` bullet list. Read by **Step 2** as its input.
+
+If the handoff file is missing or empty, Step 2 falls back to Step 1's inline text rather than
+failing. The `.handoff` folder is created automatically (`New-Item -ItemType Directory -Force`) and
+lives alongside the published briefings; it holds intermediate artifacts only and can be cleared
+safely between runs.
 
 ## Repo contents
 
@@ -50,12 +68,13 @@ environment variables that resolve per-user automatically:
 
 ## Field notes & tips
 
-### Recommended model: Claude Opus 4.8
-Run this automation with **Claude Opus 4.8**. It handles the long, multi-step run (web research,
-canonical-URL recovery, M365 account matching, PDF rendering, email) reliably and follows the Step 1
+### Recommended model: Claude Opus 4.7 or above
+Run this automation with a **Claude Opus model, version 4.7 or above** (e.g. Opus 4.7 or 4.8). These
+handle the long, multi-step run (web research,
+canonical-URL recovery, M365 account matching, PDF rendering, email) reliably and follow the Step 1
 output contract that keeps the research result a short one-line confirmation — avoiding the
-`[object Object]` step-result failure documented in `PATCH-NOTES.md`. Set it as the automation's model
-(or your default model) before enabling the schedule.
+`[object Object]` step-result failure documented in `PATCH-NOTES.md`. Set an Opus 4.7+ model as the
+automation's model (or your default model) before enabling the schedule.
 
 ### A capable model can generalize the paths for you
 The template uses placeholders, but you don't always have to hand-edit a username. When the starter
