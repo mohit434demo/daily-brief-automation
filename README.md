@@ -61,7 +61,7 @@ safely between runs.
 The template keeps only two user-specific values as placeholders; everything else uses
 environment variables that resolve per-user automatically:
 
-- `__BRIEFINGS_FOLDER__` — absolute path to your output folder (7 occurrences).
+- `__BRIEFINGS_FOLDER__` — absolute path to your output folder (11 occurrences).
 - `__ACCOUNTS__` — your semicolon-separated book of business (1 occurrence).
 - Pandoc fallback uses `$env:LOCALAPPDATA\Pandoc\pandoc.exe`.
 - WorkIQ uses `$env:USERPROFILE\.copilot\bin\workiq.cmd`.
@@ -109,3 +109,22 @@ briefings). So when you're **testing or re-running on the same day**, archive or
 - Microsoft Scout signed into M365.
 - [Pandoc](https://pandoc.org/) (`winget install JohnMacFarlane.Pandoc`).
 - Microsoft Edge (used headless to print the PDF).
+
+## Permissions (run unattended without repeated "Allow" prompts)
+
+Because this runs on a schedule with nobody watching, you should pre-authorize the operations it
+performs once, up front — otherwise the 8am run can stall waiting on an "Allow" click. The starter
+prompt walks you through this (its PERMISSIONS step), but in short:
+
+1. In **Settings → Permissions**, enable **"Allow AI to request permission changes"** (off by
+   default). This lets Scout surface one-time consent cards instead of prompting on every action.
+2. Approve, once each, the minimum this automation needs:
+   - **Auto-approve read-only** operations (the Google News / DuckDuckGo web fetches, file listing).
+   - **Shell allow-list** entries for the binaries it runs: PowerShell file operations on the
+     briefings folder, **pandoc**, and **msedge** headless PDF printing.
+   - **Per-server auto-approve** for the `filesystem` server (briefing `.md`/`.pdf` writes) and the
+     `workiq` server (M365 profile, file search, and email send).
+
+This is a one-time setup, not per-run. If you skip it, expect the scheduled run to pause on Allow
+prompts and possibly not finish unattended. Grant only what you are comfortable with — narrower
+approval just means a few prompts may still appear.

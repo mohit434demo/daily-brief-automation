@@ -21,8 +21,8 @@ ME before it can run. Do ALL of the following, in order, and report what you cha
    - Expand any environment variables I give you to a concrete absolute path.
    - Create the folder if it does not exist.
    - In Daily-Brief.json, replace EVERY occurrence of __BRIEFINGS_FOLDER__ with that absolute path.
-     It appears in all six step skip-checks AND the Save step — there should be 7 occurrences.
-     Use double backslashes in the JSON string (it is JSON-escaped).
+     It appears in all six step skip-checks, the research handoff path, AND the Save step — there
+     should be 11 occurrences. Use double backslashes in the JSON string (it is JSON-escaped).
 
 2. ASK ME FOR MY ACCOUNTS — Ask me: "What is your book of business? Paste your account names
    separated by semicolons (e.g. Contoso Corp; Fabrikam Inc; Northwind Traders)."
@@ -46,11 +46,30 @@ ME before it can run. Do ALL of the following, in order, and report what you cha
    ($env:LOCALAPPDATA\Pandoc\pandoc.exe) and WorkIQ ($env:USERPROFILE\.copilot\bin\workiq.cmd)
    already resolve for my user — no change needed.
 
-7. TEST — With the automation still disabled, archive any existing briefing for today, then do one
-   manual run. Verify: the .md and a branded PDF land in my briefings folder, and I receive an email
-   with a clickable link to the PDF. Show me the result.
+7. PERMISSIONS (avoid repeated "Allow" clicks) — This automation runs UNATTENDED on a schedule, so
+   if every PowerShell command, file write, web fetch, WorkIQ call and email send needs a manual
+   "Allow", the 8am run can stall with nobody there to approve it. Set up one-time pre-approval so
+   the scheduled run executes cleanly. Do this BEFORE the test run:
+   - Tell me this requires Settings → Permissions, and that "Allow AI to request permission changes"
+     must be ON before you can request anything (it is OFF by default). If it is off, ask me to
+     enable it (or point me to Settings → Permissions to do so).
+   - Then request, via a single consent card each, the MINIMUM the automation needs:
+     - autoApproveReadOnly = true (auto-approves read-only shell + read-only tool calls such as the
+       Google News / DuckDuckGo web fetches and listing files).
+     - Shell allow-list patterns for the specific binaries this automation runs: PowerShell file
+       and Get-ChildItem operations on the briefings folder, pandoc, and msedge headless PDF print.
+     - Per-server auto-approve for the `filesystem` and `workiq` servers (briefing file writes and
+       the M365 email/profile/search calls).
+   - Show me exactly what each consent card grants and let me click Allow ONCE per card. Explain that
+     this is a one-time setup, not per-run. If I decline, warn me that the scheduled run will likely
+     pause on Allow prompts and may not complete unattended.
 
-8. ENABLE — If the test passes, ask me to confirm, then enable the automation on its weekday-8am
+8. TEST — With the automation still disabled, archive any existing briefing for today, then do one
+   manual run. Verify: the .md and a branded PDF land in my briefings folder, and I receive an email
+   with a clickable link to the PDF. Show me the result. (If Allow prompts still appear during the
+   test, note which tool triggered them so we can widen the pre-approval in step 7.)
+
+9. ENABLE — If the test passes, ask me to confirm, then enable the automation on its weekday-8am
    schedule.
 
 Email delivery already auto-targets whoever is signed into M365 (via m365_get_my_profile), so no
