@@ -46,10 +46,18 @@ folder. Do ALL of the following, in order, and report what you changed at each s
 3. SAVE THE FILLED-IN JSON — Write the updated Weekly-Brief.json back to disk. Re-read it and confirm
    it is still valid JSON and that NO __BRIEFINGS_FOLDER__ / __ACCOUNTS__ placeholders remain.
 
-4. INTERESTS (optional) — The research/curation steps are tuned to Microsoft Fabric / Power BI /
-   Azure data. Ask me if that matches my focus or if I want to adjust the topics and search queries,
-   and apply any changes I ask for to steps 1 and 2. (The weekly window is when:7d; widen to when:14d
-   only if a query is thin.)
+4. ROLE & TAILORING — This automation is currently tuned for a Microsoft Data Solutions Engineer
+   (the research queries, curation buckets and report sections are oriented around Microsoft Fabric /
+   Power BI / Azure data). Ask me, in these exact words:
+   "This is currently tuned for a Data SE automation, would you like to tweak this to better match
+   your role? Tell me your role, and what you would like this automation to do differently."
+   - If I want to keep it as-is, change nothing and continue.
+   - If I give you a role and/or changes, ADAPT the definition to fit: rewrite the Step 1 Google News
+     search queries to my domain, adjust the Step 2 curation buckets / section names and ranking
+     criteria, update the Step 3 report section headers to match, and re-frame the Step 4
+     account-matching themes accordingly. Keep the overall structure, the Step 1 output contract, the
+     handoff file, and the PDF/email mechanics unchanged. The weekly research window stays when:7d
+     (widen to when:14d only if a query is thin). Summarize what you changed before moving on.
 
 5. CREATE THE AUTOMATION — Import the filled-in Weekly-Brief.json as a new automation called
    "Weekly Brief" (every Friday at 1pm). Keep it DISABLED for now. Leave my existing "Daily Brief"
